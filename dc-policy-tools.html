@@ -198,7 +198,70 @@
   .tree-title { font-size:12px; color:var(--text3); letter-spacing:0.04em; text-transform:uppercase; margin-bottom:14px; }
   #treeSvg { width:100%; display:block; overflow:visible; }
 
-  /* ── Footer ── */
+  /* ── Context + Case Study Tabs ── */
+  .prose-section { max-width: 780px; }
+  .prose-section h2 { font-size: 18px; font-weight: 700; color: var(--text); margin: 2rem 0 0.6rem; border-top: 1px solid var(--border); padding-top: 1.5rem; }
+  .prose-section h2:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+  .prose-section h3 { font-size: 15px; font-weight: 600; color: var(--text); margin: 1.25rem 0 0.4rem; }
+  .prose-section p { font-size: 14px; color: var(--text); line-height: 1.75; margin-bottom: 0.9rem; }
+  .prose-section ul { margin: 0 0 1rem 1.2rem; }
+  .prose-section li { font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 0.3rem; }
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 1.25rem 0; }
+  .stat-card { background: var(--surface2); border-radius: var(--radius-lg); padding: 16px; border: 1px solid var(--border); }
+  .stat-num { font-size: 24px; font-weight: 700; color: var(--accent-mid); line-height: 1.1; }
+  .stat-label { font-size: 12px; color: var(--text2); margin-top: 4px; line-height: 1.4; }
+  .callout { background: var(--accent-light); border-left: 3px solid var(--accent-mid); padding: 14px 16px; margin: 1.25rem 0; border-radius: 0 var(--radius) var(--radius) 0; }
+  .callout p { font-size: 13px; color: var(--text); margin: 0; line-height: 1.65; }
+  .source-note { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .policy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 1rem 0; }
+  @media (max-width: 640px) { .policy-grid { grid-template-columns: 1fr; } }
+  .policy-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; }
+  .policy-card.support { border-top: 3px solid #3b6d11; }
+  .policy-card.oppose { border-top: 3px solid #a32d2d; }
+  .policy-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .policy-card h4.support { color: #3b6d11; }
+  .policy-card h4.oppose { color: #a32d2d; }
+  .policy-card ul { margin-left: 1rem; }
+  .policy-card li { font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 4px; }
+
+  /* Case study */
+  .cs-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 1.5rem 0; }
+  @media (max-width: 720px) { .cs-layout { grid-template-columns: 1fr; } }
+  .cs-col { }
+  .cs-header { padding: 14px 16px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; margin-bottom: 0; }
+  .cs-header.nc { background: #e6f1fb; border: 1px solid #b5d4f4; border-bottom: none; }
+  .cs-header.va { background: #fbeaf0; border: 1px solid #f4c0d1; border-bottom: none; }
+  .cs-header h3 { font-size: 15px; font-weight: 700; margin: 0 0 2px; }
+  .cs-header.nc h3 { color: #185fa5; }
+  .cs-header.va h3 { color: #993556; }
+  .cs-header p { font-size: 12px; margin: 0; }
+  .cs-header.nc p { color: #185fa5; opacity: 0.8; }
+  .cs-header.va p { color: #993556; opacity: 0.8; }
+  .cs-body { background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 var(--radius-lg) var(--radius-lg); padding: 16px; }
+  .cs-section { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .cs-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .cs-section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; }
+  .cs-section p { font-size: 13px; color: var(--text); line-height: 1.7; margin-bottom: 0.5rem; }
+  .cs-section p:last-child { margin-bottom: 0; }
+  .cs-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+  .cs-metric { background: var(--surface2); border-radius: var(--radius); padding: 7px 9px; }
+  .cs-metric-label { font-size: 10px; color: var(--text3); }
+  .cs-metric-value { font-size: 13px; font-weight: 600; color: var(--text); margin-top: 1px; }
+  .verdict { display: inline-block; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-bottom: 8px; }
+  .verdict.denied { background: #fcebeb; color: #a32d2d; }
+  .verdict.cancelled { background: #fbeaf0; color: #993556; }
+  .compare-table-section { margin: 2rem 0; }
+  .compare-table-section h2 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 14px; }
+  .ct2 { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .ct2 th { text-align: left; padding: 9px 12px; background: var(--surface2); font-size: 11px; font-weight: 700; color: var(--text2); letter-spacing: 0.03em; }
+  .ct2 th:first-child { width: 150px; }
+  .ct2 td { padding: 9px 12px; border-top: 1px solid var(--border); vertical-align: top; font-size: 13px; color: var(--text); line-height: 1.55; }
+  .ct2 tr.diff td { background: #faeeda22; }
+  .ct2 .row-label { color: var(--text3); font-size: 12px; font-weight: 500; }
+  .primary-source { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; margin: 1rem 0; }
+  .primary-source-label { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text3); margin-bottom: 6px; }
+  .primary-source p { font-size: 13px; color: var(--text2); line-height: 1.65; margin: 0; font-style: italic; }
+  .quote-attr { font-size: 11px; color: var(--text3); margin-top: 6px; font-style: normal; }
   footer { text-align:center; padding:24px; font-size:12px; color:var(--text3); border-top:1px solid var(--border); background:var(--surface); margin-top:40px; }
 </style>
 </head>
@@ -210,6 +273,8 @@
     <nav>
       <button class="tab-btn active" onclick="switchTab('map', this)">Case Map</button>
       <button class="tab-btn" onclick="switchTab('decision', this)">Decision Framework</button>
+      <button class="tab-btn" onclick="switchTab('context', this)">Why It Matters</button>
+      <button class="tab-btn" onclick="switchTab('casestudy', this)">Case Studies</button>
     </nav>
     <div class="header-sub">PUBPOL 255 · Spring 2026</div>
   </div>
@@ -275,7 +340,221 @@
   </div>
 </div>
 
-<footer>Data Center Policy Tools &nbsp;·&nbsp; PUBPOL 255 Capstone &nbsp;·&nbsp; Spring 2026 &nbsp;·&nbsp; Case data current as of April 2026</footer>
+<!-- ════════════════════════════ WHY IT MATTERS TAB ════════════════════════════ -->
+<div id="tab-context" class="tab-content">
+  <div class="page-inner">
+    <div class="page-intro">
+      <h1>Why Data Centers Matter</h1>
+      <p>A policy overview of the national stakes, local tradeoffs, and energy constraints driving the data center debate.</p>
+    </div>
+    <div class="prose-section">
+
+      <h2>1. Introduction</h2>
+      <p>Data centers are the physical backbone of the digital economy — the facilities that store, process, and transmit the data underlying everything from cloud storage to artificial intelligence. Once a niche infrastructure concern, they have become a central issue of industrial policy. Technology companies have poured record investment into new construction: U.S. data center construction spending hit an all-time high of $40 billion at a seasonally adjusted annual rate in June 2025, a 30% increase from the year prior, following a 50% surge in 2024.</p>
+      <p>The primary driver is artificial intelligence. Training large language models requires extraordinary concentrations of computing power, and that power must be physically housed somewhere. As AI models grow in size and complexity, the computing demand grows exponentially — not linearly — placing new and accelerating pressure on U.S. energy systems, land markets, and the communities that host these facilities.</p>
+
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-num">176 TWh</div><div class="stat-label">U.S. data center electricity use in 2023 — equivalent to 16.3M households annually</div><div class="source-note">Lawrence Berkeley National Laboratory, 2024</div></div>
+        <div class="stat-card"><div class="stat-num">6.7–12%</div><div class="stat-label">Projected share of U.S. electricity consumption by 2028, up from 4.4% in 2023</div><div class="source-note">LBNL, 2024</div></div>
+        <div class="stat-card"><div class="stat-num">~3,000</div><div class="stat-label">New U.S. data centers planned or under construction in 2026, doubling existing stock</div><div class="source-note">Axios / American Edge Project, 2025</div></div>
+        <div class="stat-card"><div class="stat-num">$40B</div><div class="stat-num" style="font-size:13px;color:var(--text2);font-weight:400">annual construction rate</div><div class="stat-label">Record U.S. data center construction spend as of mid-2025</div><div class="source-note">Bank of America Institute / Reuters, 2025</div></div>
+      </div>
+
+      <h2>2. The Macro View: National Security and AI Competitiveness</h2>
+      <p>From the federal government's perspective, data centers are strategic infrastructure. The argument is straightforward: AI leadership requires compute, compute requires data centers, and data centers require energy. Any bottleneck in that chain — whether regulatory delay, energy shortage, or community opposition — is a potential national security liability.</p>
+      <p>The competitive framing centers on China. In 2024, China added approximately 429 GW of new power generation capacity — more than one-third of the entire U.S. grid — while the U.S. added just 51 GW, or 12% of global growth. OpenAI's open letter to the U.S. government warned that energy constraints directly threaten America's ability to maintain its AI lead, calling for 100 GW of new domestic energy capacity per year.</p>
+      <p>The Trump administration's 2025 executive order "Accelerating Federal Permitting of Data Center Infrastructure" operationalized this view, directing federal agencies to expedite permitting, environmental review, and infrastructure development for large data center projects deemed critical to national security. The Department of Energy has separately proposed expanding FERC's jurisdiction to streamline interstate grid access for data centers.</p>
+      <div class="callout"><p>By 2028, individual AI training runs could require up to 1 GW of power in a single location — roughly equivalent to the output of a large nuclear reactor. Global AI data center power demand could reach 327 GW by 2030, compared to total global data center capacity of just 88 GW in 2022. <span class="source-note">— RAND Corporation, 2025</span></p></div>
+
+      <h2>3. The Micro View: Community Concerns</h2>
+      <p>As data centers have spread from established hubs in Northern Virginia and Texas to smaller markets across the country, the communities asked to host them have become increasingly vocal. The concerns are concrete and local: electricity rate increases, water draw from stressed aquifers, noise from cooling systems, light pollution, and the loss of agricultural or rural land.</p>
+      <p>By mid-2025, two-thirds of tracked data center projects — valued at $98 billion across 11 states — were stalled amid community and state-level opposition. Several North Carolina counties have passed temporary moratoriums on new data center permits. The result is a direct collision between the macro imperative for rapid expansion and the micro reality of communities being asked to absorb costs they did not choose and may not benefit from.</p>
+      <p>The concerns are not uniformly distributed. Rural communities with limited existing industrial base and weaker political infrastructure tend to face more one-sided negotiations. Communities in established data center markets like Loudoun County, Virginia, have more precedent, legal capacity, and leverage.</p>
+
+      <h2>4. Energy Constraints</h2>
+      <p>The grid cannot absorb this growth without significant new investment. Present U.S. data center capacity amounts to approximately 51 GW. By 2028, an estimated 44 GW of additional capacity will be needed — but given grid infrastructure constraints, only about 25 GW is expected to come online in time, leaving a gap of roughly 19 GW, or 40% of projected need.</p>
+      <p>The interconnection queue is the central bottleneck. PJM, the largest U.S. grid operator and home to Virginia's data center corridor, now takes more than eight years from interconnection filing to commercial operation. In Virginia specifically, wait times of four to seven years are common. This reflects both the scale of new demand and the age of existing infrastructure — many poles, wires, and transformers date to the 1960s and 1970s.</p>
+      <div class="callout"><p>Researchers at Duke University found that if data center operators could restrict their consumption just 0.25% of the time during peak load events, the grid could safely accommodate approximately 76 GW of additional demand — without requiring equivalent new generation. <span class="source-note">— Financial Times / Duke University, 2025</span></p></div>
+
+      <h2>5. Utility Costs and Who Pays</h2>
+      <p>There are two distinct mechanisms by which data centers can raise electricity costs for households and businesses that have nothing to do with AI. First, when a utility builds new infrastructure — substations, transmission lines, transformers — to serve a data center, it typically socializes that cost across all ratepayers. This has been the standard utility business model for a century, but the scale of data center investment is straining the assumption that costs should be spread evenly.</p>
+      <p>Second, data centers dramatically increase electricity demand in regional markets. When demand rises faster than supply — which is the current situation in multiple U.S. regions — energy prices increase for all buyers. Carnegie Mellon modeling found that electricity costs in central and northern Virginia could increase 25% or more by 2030, due in part to data center growth. National average increases are projected at approximately 8%.</p>
+      <p>A further concern involves fossil fuels. To sustain rapid load growth, utilities in several states have kept gas-fired peaker plants operational beyond their planned retirement dates, or have added new gas generation. This creates a tension between data center companies' public renewable energy commitments and the grid-level reality of how their demand is actually being met.</p>
+
+      <h2>6. Current Policy Landscape</h2>
+      <div class="policy-grid">
+        <div class="policy-card support">
+          <h4 class="support">Policies supporting expansion</h4>
+          <ul>
+            <li><strong>Federal EO (2025):</strong> Expedites permitting and environmental review for data centers deemed critical to national security</li>
+            <li><strong>DOE/FERC proposal:</strong> FERC jurisdiction over large load interconnection to streamline grid access</li>
+            <li><strong>OpenAI letter to OSTP:</strong> Calls for 100 GW/yr new energy, fast-track interconnection for curtailable loads, CAA/CWA permitting reform</li>
+            <li><strong>ERCOT "Connect and Manage":</strong> Texas model allowing connection before full transmission upgrades, conditioned on curtailment ability</li>
+          </ul>
+        </div>
+        <div class="policy-card oppose">
+          <h4 class="oppose">Policies limiting or conditioning expansion</h4>
+          <ul>
+            <li><strong>NC county moratoriums (2025–26):</strong> Multiple NC counties passed temporary permits bans pending impact review</li>
+            <li><strong>Local zoning denials:</strong> Tarboro, NC (Sep 2025); Pittsylvania Co., VA (2025) denied or drove withdrawal of major proposals</li>
+            <li><strong>PUC rate challenges:</strong> Virginia ratepayer groups filing PUC challenges over socialized grid upgrade costs</li>
+            <li><strong>DOE voluntary efficiency guidance:</strong> Best practices published but unenforced; no mandatory federal standard exists</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════ CASE STUDIES TAB ════════════════════════════ -->
+<div id="tab-casestudy" class="tab-content">
+  <div class="page-inner">
+    <div class="page-intro">
+      <h1>Comparative Case Studies</h1>
+      <p>Two data center proposals — one in North Carolina, one in Virginia — examined in depth. Both were denied or withdrawn following community opposition, making them the clearest illustrations of what drives backlash and what communities can do about it.</p>
+    </div>
+
+    <div class="cs-layout">
+      <!-- NC COLUMN -->
+      <div class="cs-col">
+        <div class="cs-header nc">
+          <h3>Tarboro Data Center Campus</h3>
+          <p>Energy Storage Solutions, LLC · Edgecombe County, NC · Permit denied September 2025</p>
+        </div>
+        <div class="cs-body">
+
+          <div class="cs-section">
+            <div class="cs-section-label">Project Profile</div>
+            <div class="cs-metrics">
+              <div class="cs-metric"><div class="cs-metric-label">Investment</div><div class="cs-metric-value">$6.4B</div></div>
+              <div class="cs-metric"><div class="cs-metric-label">Capacity</div><div class="cs-metric-value">300 MW</div></div>
+              <div class="cs-metric"><div class="cs-metric-label">Acreage</div><div class="cs-metric-value">52 acres</div></div>
+              <div class="cs-metric"><div class="cs-metric-label">Target</div><div class="cs-metric-value">2028</div></div>
+            </div>
+            <p>Energy Storage Solutions proposed a 300 MW data center and energy storage system on approximately 52 acres of Heavy Industrial-zoned land on the south side of Anaconda Road in Tarboro, NC. The project also involved construction of a dedicated substation and solar generation capacity. The developer marketed the facility as "net zero" and "EMP hardened," though these claims were contested during hearings.</p>
+          </div>
+
+          <div class="cs-section">
+            <div class="cs-section-label">Local Context</div>
+            <p>Tarboro is a small town of roughly 10,000 in Edgecombe County — one of North Carolina's most economically distressed counties, with high unemployment and a legacy industrial base. The site was zoned Heavy Industrial, suggesting it should in principle be suitable for large-scale industrial development. However, the parcel was adjacent to residential properties, creating an immediate conflict between the zoning designation and the lived experience of nearby homeowners.</p>
+            <p>Notably, the same developer received approval for a much larger $19.2B, 900 MW campus just miles away in the same county at Kingsboro — demonstrating that the Tarboro denial was not a blanket rejection of data center development in the region, but a site-specific and process-specific outcome.</p>
+          </div>
+
+          <div class="cs-section">
+            <div class="cs-section-label">Developer Promises vs. Community Concerns</div>
+            <p><strong>Promises:</strong> 500 employees and $11M per year in tax revenue. The developer also claimed net-zero operations and cited the EMP hardening as a national security benefit.</p>
+            <p><strong>Concerns raised by adjacent property owners with legal standing:</strong> Air quality impacts from the natural gas infrastructure, noise pollution from cooling systems, light pollution, water demand, detrimental effect on adjacent residential property values, and incompatibility with the character of the surrounding area. Nine adjacent property owners established legal standing to participate as parties in the evidentiary hearing.</p>
+          </div>
+
+          <div class="cs-section">
+            <div class="cs-section-label">Primary Source: Town Council Minutes, Sep 8, 2025</div>
+            <div class="primary-source">
+              <div class="primary-source-label">From the official record of Special Use Permit 25-02</div>
+              <p>The Council voted 7–1 that the application was not compliant with findings of fact on four grounds: that the development would be detrimental to adjacent properties; that it would endanger public health or safety; that it would injure the value of adjoining property; and that it would not be in harmony with the area in which it is located. The permit was subsequently denied 7–1.</p>
+              <div class="quote-attr">Town of Tarboro Council Minutes, September 8, 2025 · Councilman Anderson cast the sole dissenting vote on both motions</div>
+            </div>
+            <p>The procedural record is also notable. The Mayor recused himself from the hearing, and nine adjacent landowners established legal standing as parties — an unusually robust participation structure for a local zoning proceeding, suggesting the community was organized and legally prepared well before the hearing date.</p>
+          </div>
+
+          <div class="cs-section">
+            <div class="cs-section-label">Outcome & Current Status</div>
+            <span class="verdict denied">Permit Denied — 7 to 1</span>
+            <p>The Town of Tarboro denied the Special Use Permit in September 2025. Energy Storage Solutions appealed the decision to the Edgecombe County Superior Court. The appeal is pending as of April 2026. The developer has not publicly withdrawn the project, distinguishing this outcome from Balico in Virginia.</p>
+          </div>
+
+          <div class="cs-section">
+            <div class="cs-section-label">Key Takeaways</div>
+            <p>The Tarboro case illustrates that adjacency to residential areas is a decisive liability even in Industrial-zoned locations. The developer's net-zero and EMP-hardened claims did not overcome concrete proximity concerns from neighbors who could demonstrate special damages. The organized legal participation of nine adjacent owners — and the town attorney's structuring of the evidentiary hearing — gave community concerns institutional weight that general public comment would not have. The contrast with the nearby Kingsboro approval suggests site selection and community relationship matter more than project scale or developer identity.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- VA COLUMN -->
+      <div class="cs-col">
+        <div class="cs-header va">
+          <h3>Balico Data Center Megacampus</h3>
+          <p>Balico · Pittsylvania County, VA · Proposal withdrawn April 2025</p>
+        </div>
+        <div class="cs-body">
+
+          <div class="cs-section">
+            <div class="cs-section-label">Project Profile</div>
+            <div class="cs-metrics">
+              <div class="cs-metric"><div class="cs-metric-label">Investment</div><div class="cs-metric-value">$3.7B</div></div>
+              <div class="cs-metric"><div class="cs-metric-label">Capacity</div><div class="cs-metric-value">3,500 MW</div></div>
+              <div class="cs-metric"><div class="cs-metric-label">Acreage</div><div class="cs-metric-value">2,200 acres</div></div>
+              <div class="cs-metric"><div class="cs-metric-label">Status</div><div class="cs-metric-value">Withdrawn</div></div>
+            </div>
+            <p>Balico proposed one of the largest data center developments in Virginia history: a 3,500 MW hyperscale campus across 2,200 acres in rural Pittsylvania County, near the town of Chatham. Critically, the proposal included an on-site natural gas power plant as part of the facility infrastructure — not a grid interconnection, but dedicated fossil fuel generation built specifically to power the data center.</p>
+          </div>
+
+          <div class="cs-section">
+            <div class="cs-section-label">Local Context</div>
+            <p>Pittsylvania County is rural, agriculturally rooted, and geographically distant from Virginia's established data center corridor in Northern Virginia (Loudoun County). Unlike Loudoun, which has decades of experience negotiating with hyperscale developers, Pittsylvania had no institutional precedent for evaluating proposals of this scale. The proposed 2,200-acre footprint represents a fundamental land use transformation for a rural county, not an incremental expansion of existing industrial zoning.</p>
+            <p>The county is also outside the PJM grid's most congested zones, meaning it lacked the established interconnection infrastructure that data center developers typically prefer — which may explain why an on-site gas plant was included in the proposal.</p>
+          </div>
+
+          <div class="cs-section">
+            <div class="cs-section-label">Developer Promises vs. Community Concerns</div>
+            <p><strong>Promises:</strong> 390 jobs between the data center and the on-site power plant, and projected tax revenue of $50–184M annually — a wide range that itself became a source of community skepticism about the reliability of economic projections.</p>
+            <p><strong>Concerns:</strong> Opposition coalesced around rural and cultural identity — residents framed the proposal as incompatible with Pittsylvania's agricultural character — as well as environmental concerns about the on-site gas plant's air quality and emissions impacts. The wide variance in the tax revenue estimate ($50M to $184M) undermined the economic case, with opponents questioning whether promised benefits would materialize or accrue locally.</p>
+          </div>
+
+          <div class="cs-section">
+            <div class="cs-section-label">Process & Developer Response</div>
+            <p>Unlike Tarboro, where the community organized through an evidentiary hearing with formal legal standing, the Balico opposition appears to have operated primarily through public comment, county board pressure, and sustained civic engagement over several months. The developer's response — submitting a revised proposal — suggests it believed the opposition could be partially accommodated. The County Board of Supervisors nonetheless denied the revised proposal, and after months of postponed votes, Balico withdrew the project entirely in April 2025.</p>
+            <p>The withdrawal, rather than an appeal, distinguishes this outcome from Tarboro. Balico's decision to abandon rather than litigate suggests the company concluded that community opposition in Pittsylvania was structural, not procedural — that no revised proposal would overcome the fundamental mismatch between the project's scale and the county's character.</p>
+          </div>
+
+          <div class="cs-section">
+            <div class="cs-section-label">Outcome & Current Status</div>
+            <span class="verdict cancelled">Withdrawn — Project Cancelled</span>
+            <p>Balico formally withdrew the proposal in April 2025 after the County Board denied the revised application. No appeal was filed. The project is cancelled. The site remains undeveloped agricultural land.</p>
+          </div>
+
+          <div class="cs-section">
+            <div class="cs-section-label">Key Takeaways</div>
+            <p>The Balico case demonstrates that hyperscale projects face qualitatively different community dynamics than mid-scale ones. At 2,200 acres and 3,500 MW, the proposal was not a marginal addition to existing industrial land use — it was a wholesale transformation of rural landscape. The inclusion of an on-site gas plant was a significant strategic error: it converted an economic development question into an environmental and energy policy question, broadening the opposition coalition beyond adjacent property owners to environmental advocates and energy policy critics. The $50–184M tax revenue range suggests the economic case was not well-developed, undermining developer credibility at a critical early stage.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARATIVE ANALYSIS -->
+    <div class="compare-table-section">
+      <h2>Comparative Analysis</h2>
+      <p style="font-size:14px;color:var(--text2);margin-bottom:16px;">Direct comparison across the framework dimensions from the paper outline (Section 7a–g).</p>
+      <div style="overflow-x:auto;">
+      <table class="ct2">
+        <tr><th>Dimension</th><th>Tarboro, NC (ESS)</th><th>Pittsylvania, VA (Balico)</th></tr>
+        <tr><td class="row-label">Scale</td><td>300 MW, 52 acres — mid-scale</td><td>3,500 MW, 2,200 acres — hyperscale</td></tr>
+        <tr class="diff"><td class="row-label">Energy source</td><td>Natural gas + solar; own substation</td><td>On-site natural gas power plant</td></tr>
+        <tr><td class="row-label">Site context</td><td>Heavy Industrial zoning, adjacent to residential</td><td>Rural agricultural land, no precedent for scale</td></tr>
+        <tr class="diff"><td class="row-label">Developer promises</td><td>500 jobs, $11M/yr taxes — specific but contested</td><td>390 jobs, $50–184M taxes — wide range undermined credibility</td></tr>
+        <tr><td class="row-label">Primary concerns</td><td>Adjacency, property values, air/noise/light/water</td><td>Rural character, environment, economic skepticism</td></tr>
+        <tr class="diff"><td class="row-label">Opposition structure</td><td>Formal evidentiary hearing; 9 adjacent owners with legal standing</td><td>Sustained civic engagement; public comment and board pressure</td></tr>
+        <tr><td class="row-label">Developer response</td><td>No documented revision; contested hearing</td><td>Revised proposal submitted; ultimately withdrew</td></tr>
+        <tr class="diff"><td class="row-label">Outcome</td><td>Permit denied 7–1; developer appealing in court</td><td>Revised proposal denied; developer withdrew entirely</td></tr>
+        <tr><td class="row-label">Post-denial path</td><td>Legal appeal to Superior Court — outcome pending</td><td>Project cancelled; no appeal filed</td></tr>
+        <tr class="diff"><td class="row-label">What drove the result</td><td>Residential adjacency + organized legal participation</td><td>Scale mismatch + gas plant + credibility gap on economics</td></tr>
+      </table>
+      </div>
+
+      <div class="prose-section" style="margin-top:1.5rem;">
+        <h3>Synthesis</h3>
+        <p>Despite their geographic and institutional differences, both cases share a common structure: a developer underestimated the importance of community fit and overestimated the persuasive power of economic projections. In Tarboro, the site selection placed an industrial facility directly adjacent to residential properties in a small town without the institutional capacity to negotiate detailed mitigation conditions — the result was a binary rejection rather than a negotiated approval. In Pittsylvania, the scale of the proposal and the inclusion of on-site fossil generation transformed what could have been an economic development conversation into a much broader values conflict about land, environment, and rural identity.</p>
+        <p>Both cases also suggest that the timing of community engagement matters. In Tarboro, nine adjacent landowners organized sufficiently to achieve legal standing in a formal evidentiary proceeding — a significant institutional achievement for a small community. In Pittsylvania, opposition sustained itself over months of postponed votes until the developer concluded withdrawal was preferable to further attrition. Neither community had a formal Community Benefits Agreement framework available to them; both relied on the blunt instrument of outright denial rather than conditioned approval.</p>
+        <p>The contrast with the nearby Kingsboro approval (same developer, same county as Tarboro, no opposition) and the Microsoft Catawba approvals (organized developer engagement, Duke Energy infrastructure deal, positive community framing) suggests that the determining variables are less about data centers as a category and more about site selection, developer credibility, and the presence or absence of binding commitments made before community opposition organizes.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+ &nbsp;·&nbsp; PUBPOL 255 Capstone &nbsp;·&nbsp; Spring 2026 &nbsp;·&nbsp; Case data current as of April 2026</footer>
 
 <!-- ════════════════ SCRIPTS ════════════════ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>

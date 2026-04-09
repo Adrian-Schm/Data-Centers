@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Center Policy Tools</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --surface2: #f1efe8;
+    --border: rgba(0,0,0,0.1);
+    --border2: rgba(0,0,0,0.18);
+    --text: #1a1a18;
+    --text2: #5f5e5a;
+    --text3: #888780;
+    --accent: #1a3a5c;
+    --accent-light: #e6f1fb;
+    --accent-mid: #185fa5;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #242422;
+      --surface2: #2c2c2a;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.15);
+      --text: #e8e6de;
+      --text2: #b4b2a9;
+      --text3: #888780;
+      --accent: #4a8fd4;
+      --accent-light: #0c2a44;
+      --accent-mid: #4a8fd4;
+    }
+  }
+
+  body {
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+  }
+  .site-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 18px 24px 18px 0;
+    border-right: 1px solid var(--border);
+    margin-right: 8px;
+    white-space: nowrap;
+  }
+  .site-title span { color: var(--text3); font-weight: 400; }
+  nav { display: flex; align-items: stretch; gap: 2px; }
+  .tab-btn {
+    background: none;
+    border: none;
+    padding: 0 18px;
+    font-size: 13px;
+    color: var(--text2);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    font-family: inherit;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent-mid); border-bottom-color: var(--accent-mid); font-weight: 500; }
+  .header-sub {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--text3);
+    align-self: center;
+    white-space: nowrap;
+  }
+
+  /* ── Layout ── */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .page-inner { max-width: 1100px; margin: 0 auto; padding: 28px 24px 60px; }
+
+  .page-intro { margin-bottom: 24px; }
+  .page-intro h1 { font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .page-intro p { font-size: 14px; color: var(--text2); max-width: 680px; }
+
+  /* ── Map Tab ── */
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; font-size: 12px; color: var(--text2); align-items: center; }
+  .ld { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
+  .map-wrap { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 16px; position: relative; }
+  .map-wrap svg { display: block; width: 100%; }
+  .map-tip { position: absolute; bottom: 10px; right: 12px; font-size: 11px; color: var(--text3); background: var(--surface); padding: 4px 8px; border-radius: var(--radius); border: 1px solid var(--border); pointer-events: none; }
+
+  .sel-bar { display: none; align-items: center; gap: 8px; padding: 8px 14px; background: var(--surface2); border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 14px; font-size: 13px; flex-wrap: wrap; }
+  .sel-bar.show { display: flex; }
+  .btn { font-size: 12px; padding: 5px 12px; border: 1px solid var(--border2); border-radius: var(--radius); background: transparent; color: var(--text); cursor: pointer; font-family: inherit; transition: background 0.1s; }
+  .btn:hover { background: var(--surface2); }
+
+  .panel-area { display: grid; gap: 14px; }
+  .panel-area.single { grid-template-columns: 1fr; }
+  .panel-area.double { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 700px) { .panel-area.double { grid-template-columns: 1fr; } }
+
+  .story-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; min-height: 260px; }
+  .story-panel.p1 { border-top: 3px solid #185fa5; }
+  .story-panel.p2 { border-top: 3px solid #854f0b; }
+  .ph { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .pt { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.3; }
+  .ps { font-size: 12px; color: var(--text2); margin-top: 3px; }
+  .badge { font-size: 11px; padding: 3px 9px; border-radius: 20px; white-space: nowrap; margin-left: 8px; flex-shrink: 0; font-weight: 500; }
+  .b-Positive { background:#eaf3de; color:#3b6d11; }
+  .b-Delayed { background:#faeeda; color:#854f0b; }
+  .b-Negative { background:#fcebeb; color:#a32d2d; }
+  .b-Neutral { background:#f1efe8; color:#5f5e5a; }
+  .b-Planned { background:#e6f1fb; color:#185fa5; }
+  .b-Cancelled { background:#fbeaf0; color:#993556; }
+  .metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 12px 0; }
+  .metric { background: var(--surface2); border-radius: var(--radius); padding: 8px 10px; }
+  .ml { font-size: 11px; color: var(--text3); }
+  .mv { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 2px; }
+  .sec-head { font-size: 11px; color: var(--text3); margin: 14px 0 8px; letter-spacing: 0.04em; text-transform: uppercase; border-top: 1px solid var(--border); padding-top: 12px; }
+  .tl { padding-left: 18px; position: relative; }
+  .tl::before { content:''; position:absolute; left:5px; top:8px; bottom:8px; width:1px; background:var(--border2); }
+  .te { position:relative; margin-bottom:14px; }
+  .td { position:absolute; left:-13px; top:5px; width:8px; height:8px; border-radius:50%; border:1.5px solid var(--border2); background:var(--surface); }
+  .td.f { background:var(--text2); border-color:var(--text2); }
+  .tdate { font-size:11px; color:var(--text3); margin-bottom:2px; }
+  .ttext { font-size:13px; color:var(--text); line-height:1.6; }
+  .placeholder { font-size:14px; color:var(--text3); text-align:center; padding:3rem 0; line-height:1.8; }
+  .close-btn { font-size:11px; padding:3px 8px; border:1px solid var(--border); border-radius:var(--radius); background:transparent; color:var(--text2); cursor:pointer; font-family:inherit; }
+  .close-btn:hover { color:var(--text); }
+  .pin { cursor:pointer; }
+
+  /* ── Decision Tab ── */
+  .fw-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+  @media (max-width: 800px) { .fw-layout { grid-template-columns: 1fr; } }
+
+  .fw-left {}
+  .fw-right { position: sticky; top: 80px; }
+
+  .prog { height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 20px; }
+  .prog-fill { height:100%; background: var(--accent-mid); border-radius:2px; transition:width 0.3s; }
+  .step-nav { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:20px; }
+  .sp { font-size:11px; padding:4px 10px; border-radius:20px; border:1px solid var(--border); color:var(--text3); }
+  .sp.done { background:var(--surface2); color:var(--text); }
+  .sp.active { background:var(--accent-light); color:var(--accent-mid); border-color:var(--accent-mid); font-weight:500; }
+
+  .qcard { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; margin-bottom:14px; }
+  .qlabel { font-size:11px; color:var(--text3); margin-bottom:8px; letter-spacing:0.04em; text-transform:uppercase; }
+  .qtext { font-size:16px; font-weight:600; color:var(--text); line-height:1.5; margin-bottom:12px; }
+  .qctx { font-size:13px; color:var(--text2); line-height:1.65; margin-bottom:20px; padding:12px 14px; background:var(--surface2); border-left:3px solid var(--border2); }
+  .opts { display:grid; gap:8px; }
+  .opt { width:100%; text-align:left; padding:13px 16px; border:1px solid var(--border2); border-radius:var(--radius); background:var(--surface); color:var(--text); font-size:13px; cursor:pointer; font-family:inherit; transition:background 0.1s, border-color 0.1s; }
+  .opt:hover { background:var(--surface2); border-color:var(--accent-mid); }
+  .ol { font-weight:600; display:block; }
+  .os { font-size:12px; color:var(--text2); margin-top:3px; display:block; }
+
+  .result-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
+  .rh { padding:20px; }
+  .rposture { font-size:18px; font-weight:700; margin-bottom:5px; }
+  .rsub { font-size:13px; line-height:1.6; opacity:0.85; }
+  .rb { padding:0 20px 20px; }
+  .rs { margin-top:16px; }
+  .rs-title { font-size:11px; color:var(--text3); margin-bottom:8px; letter-spacing:0.04em; text-transform:uppercase; }
+  .al { list-style:none; }
+  .al li { font-size:13px; color:var(--text); padding:7px 0; border-top:1px solid var(--border); line-height:1.55; display:flex; gap:10px; }
+  .al li::before { content:'→'; color:var(--text3); flex-shrink:0; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .chip { font-size:12px; padding:4px 10px; border-radius:var(--radius); border:1px solid var(--border); color:var(--text2); }
+  .restart { margin-top:16px; font-size:13px; padding:9px 18px; border:1px solid var(--border2); border-radius:var(--radius); background:transparent; color:var(--text); cursor:pointer; font-family:inherit; }
+  .restart:hover { background:var(--surface2); }
+
+  .tree-wrap { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; }
+  .tree-title { font-size:12px; color:var(--text3); letter-spacing:0.04em; text-transform:uppercase; margin-bottom:14px; }
+  #treeSvg { width:100%; display:block; overflow:visible; }
+
+  /* ── Footer ── */
+  footer { text-align:center; padding:24px; font-size:12px; color:var(--text3); border-top:1px solid var(--border); background:var(--surface); margin-top:40px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="site-title">Data Center Policy <span>/ NC & VA</span></div>
+    <nav>
+      <button class="tab-btn active" onclick="switchTab('map', this)">Case Map</button>
+      <button class="tab-btn" onclick="switchTab('decision', this)">Decision Framework</button>
+    </nav>
+    <div class="header-sub">PUBPOL 255 · Spring 2026</div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════ MAP TAB ════════════════════════════════ -->
+<div id="tab-map" class="tab-content active">
+  <div class="page-inner">
+    <div class="page-intro">
+      <h1>Data Center Case Map</h1>
+      <p>Six data center proposals across Virginia and North Carolina, each at a different stage of community response. Click any pin to read its story. Select two to compare side by side.</p>
+    </div>
+
+    <div class="legend">
+      <span><span class="ld" style="background:#3b6d11"></span>Positive/Approved</span>
+      <span><span class="ld" style="background:#854f0b"></span>Delayed</span>
+      <span><span class="ld" style="background:#a32d2d"></span>Negative/Opposed</span>
+      <span><span class="ld" style="background:#5f5e5a"></span>Planned/Neutral</span>
+      <span><span class="ld" style="background:#993556"></span>Cancelled</span>
+      <span style="margin-left:auto;font-size:11px;color:var(--text3)">Click pin · Click 2 to compare</span>
+    </div>
+
+    <div class="map-wrap">
+      <svg viewBox="0 0 860 400" id="mapSvg"></svg>
+      <div class="map-tip">VA &amp; NC region</div>
+    </div>
+
+    <div class="sel-bar" id="selBar">
+      <span style="font-size:12px;color:var(--text3)">Comparing:</span>
+      <strong id="selNames" style="font-size:13px;"></strong>
+      <button class="btn" onclick="clearAll()">Clear</button>
+    </div>
+
+    <div class="panel-area single" id="panelArea">
+      <div class="story-panel" id="panel1">
+        <div class="placeholder">Click a pin on the map to explore a project<br><span style="font-size:12px">Select two pins to compare side by side</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════ DECISION TAB ════════════════════════════ -->
+<div id="tab-decision" class="tab-content">
+  <div class="page-inner">
+    <div class="page-intro">
+      <h1>Community Decision Framework</h1>
+      <p>A structured guide for local communities evaluating a proposed data center. Drawn from case findings across NC and VA — not a prediction, but a prompt for the right questions.</p>
+    </div>
+
+    <div class="fw-layout">
+      <div class="fw-left">
+        <div class="prog"><div class="prog-fill" id="pf" style="width:0%"></div></div>
+        <div class="step-nav" id="nav"></div>
+        <div id="fwContent"></div>
+      </div>
+      <div class="fw-right">
+        <div class="tree-wrap">
+          <div class="tree-title">All possible paths</div>
+          <svg id="treeSvg" viewBox="0 0 380 520"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>Data Center Policy Tools &nbsp;·&nbsp; PUBPOL 255 Capstone &nbsp;·&nbsp; Spring 2026 &nbsp;·&nbsp; Case data current as of April 2026</footer>
+
+<!-- ════════════════ SCRIPTS ════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+
+/* ─── TAB SWITCHING ─── */
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ══════════════════════════════════════════
+   MAP
+══════════════════════════════════════════ */
+const CASES = [
+  { id:1, name:"Kingsboro Data Center", short:"Kingsboro", company:"Energy Storage Solutions", state:"NC", county:"Edgecombe", sentiment:"Positive",
+    investment:"$19.2B", mw:"900", acres:"155", timeline:"2028", energy:"Natural gas",
+    resource:"Net zero; natgas lines; EMP hardened", promises:"500 employees",
+    concerns:"None documented", communityAction:"Positive — county board amended ordinances; sale of public land",
+    developerAction:"—", outcome:"Approved. Ordinances amended, construction proceeding.",
+    lat:35.87, lng:-77.59,
+    events:[
+      {date:"Planned 2028", label:"Announcement", text:"Energy Storage Solutions proposes 900 MW, $19.2B campus in rural Edgecombe County — among NC's largest-ever data center investments."},
+      {date:"Community response", label:"Reception", text:"No organized opposition documented. County officials react favorably."},
+      {date:"Approval", label:"Outcome", text:"County Board amended zoning ordinances and executed sale of public land. Approved and proceeding toward 2028.", filled:true}
+    ]
+  },
+  { id:2, name:"Tarboro Data Center", short:"Tarboro", company:"Energy Storage Solutions", state:"NC", county:"Edgecombe", sentiment:"Delayed",
+    investment:"$6.4B", mw:"300", acres:"52", timeline:"2028", energy:"Natural gas, Solar",
+    resource:"Net zero; natgas + solar; own substation; EMP hardened", promises:"500 employees, $11M/yr tax revenue",
+    concerns:"Air quality, noise, light pollution, water demand",
+    communityAction:"Negative — Town of Tarboro denied special use permit",
+    developerAction:"Appealed to Superior County Court", outcome:"Permit denied. Developer appealing to Superior County Court.",
+    lat:35.90, lng:-77.53,
+    events:[
+      {date:"Planned 2028", label:"Announcement", text:"Same developer proposes adjacent 300 MW campus near Tarboro — promising 500 jobs and $11M/yr in revenue."},
+      {date:"Opposition", label:"Community concerns", text:"Residents raise air quality, noise, light pollution, and water demand concerns. Sentiment turns decisively negative."},
+      {date:"Denial", label:"Permit denied", text:"Town of Tarboro denies the special use permit — a stark contrast to the nearby Kingsboro approval."},
+      {date:"Appeal", label:"Legal challenge", text:"Developer files appeal with Superior County Court. Outcome pending.", filled:true}
+    ]
+  },
+  { id:3, name:"Microsoft Catawba (3 sites)", short:"MS Catawba", company:"Microsoft", state:"NC", county:"Catawba", sentiment:"Neutral",
+    investment:"$1B (joint)", mw:"270 each", acres:"220 (Lyle Creek)", timeline:"2028", energy:"Duke Energy grid",
+    resource:"Dedicated Duke substation; 4.5 GW deal", promises:"$1B investment in Catawba over 10 years",
+    concerns:"None documented", communityAction:"Positive/Neutral",
+    developerAction:"Secured dedicated Duke Energy substation deal",
+    outcome:"All three campuses (Stover North, Lyle Creek, Boyd Farm) restarted after prior pause.",
+    lat:35.66, lng:-81.21,
+    events:[
+      {date:"Initial plan", label:"Announcement", text:"Microsoft announces $1B across three Catawba County sites at 270 MW each: Stover North, Lyle Creek, and Boyd Farm."},
+      {date:"Pause", label:"Briefly paused", text:"All three campuses briefly paused; reason not fully documented in public record."},
+      {date:"Restart", label:"Restarted", text:"Projects restart with dedicated Duke Energy substation deal covering 4.5 GW. Community sentiment positive/neutral.", filled:true}
+    ]
+  },
+  { id:4, name:"Balico Megacampus", short:"Balico VA", company:"Balico", state:"VA", county:"Pittsylvania", sentiment:"Cancelled",
+    investment:"$3.7B", mw:"3,500", acres:"2,200", timeline:"—", energy:"Natural gas (on-site plant)",
+    resource:"On-site gas power plant included in construction", promises:"390 jobs; $50–184M annual taxes",
+    concerns:"Rural lifestyle/culture, environment, skepticism of economic promises",
+    communityAction:"Negative — County Board denied revised proposal",
+    developerAction:"Revised then withdrew proposal entirely",
+    outcome:"Withdrawn and cancelled after sustained community opposition and vote postponements.",
+    lat:36.89, lng:-79.39,
+    events:[
+      {date:"Proposal", label:"Announcement", text:"Balico proposes 3,500 MW on 2,200 acres in rural Pittsylvania County, including an on-site natural gas power plant."},
+      {date:"Opposition", label:"Grassroots pushback", text:"Community organizes around rural character, environment, and skepticism of 390-job/$184M tax promises."},
+      {date:"Revision", label:"Developer revises", text:"Balico submits revised proposal in response to sustained opposition."},
+      {date:"Denial", label:"Board denies", text:"Pittsylvania County Board denies the revised proposal after months of postponed votes."},
+      {date:"Apr 2025", label:"Withdrawal", text:"Balico withdraws entirely. Project cancelled.", filled:true}
+    ]
+  },
+  { id:5, name:"Botetourt Campus", short:"Google VA", company:"Google", state:"VA", county:"Botetourt", sentiment:"Planned",
+    investment:"TBD", mw:"TBD", acres:"TBD", timeline:"TBD", energy:"TBD",
+    resource:"TBD", promises:"TBD", concerns:"TBD",
+    communityAction:"TBD", developerAction:"TBD",
+    outcome:"In progress — details still being researched.",
+    lat:37.54, lng:-79.82,
+    events:[
+      {date:"In progress", label:"Status", text:"Google data center proposed in Botetourt County, VA. Investment, capacity, and community reaction details still being researched.", filled:true}
+    ]
+  }
+];
+
+const PIN_COLORS = { Positive:'#3b6d11', Delayed:'#854f0b', Negative:'#a32d2d', Neutral:'#5f5e5a', Planned:'#185fa5', Cancelled:'#993556' };
+const SLOT_COLORS = ['#185fa5','#854f0b'];
+let selected = [];
+
+function renderPanel(el, c, slot) {
+  el.className = 'story-panel p' + (slot + 1);
+  el.innerHTML = `
+    <div class="ph">
+      <div><div class="pt">${c.name}</div><div class="ps">${c.company} · ${c.county} Co., ${c.state}</div></div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="badge b-${c.sentiment}">${c.sentiment}</span>
+        <button class="close-btn" onclick="removeSlot(${slot})">✕</button>
+      </div>
+    </div>
+    <div class="metrics">
+      <div class="metric"><div class="ml">Investment</div><div class="mv">${c.investment}</div></div>
+      <div class="metric"><div class="ml">Capacity</div><div class="mv">${c.mw} MW</div></div>
+      <div class="metric"><div class="ml">Acreage</div><div class="mv">${c.acres} ac</div></div>
+    </div>
+    <div class="sec-head">Story</div>
+    <div class="tl">${c.events.map(ev=>`
+      <div class="te">
+        <div class="td ${ev.filled?'f':''}"></div>
+        <div class="tdate">${ev.date} — ${ev.label}</div>
+        <div class="ttext">${ev.text}</div>
+      </div>`).join('')}
+    </div>`;
+}
+
+function renderEmpty() {
+  const a = document.getElementById('panelArea');
+  a.className = 'panel-area single';
+  while (a.children.length > 1) a.removeChild(a.lastChild);
+  a.children[0].className = 'story-panel';
+  a.children[0].innerHTML = '<div class="placeholder">Click a pin to explore a project<br><span style="font-size:12px">Select two pins to compare side by side</span></div>';
+}
+
+function renderSingle(c) {
+  const a = document.getElementById('panelArea');
+  a.className = 'panel-area single';
+  while (a.children.length > 1) a.removeChild(a.lastChild);
+  renderPanel(a.children[0], c, 0);
+}
+
+function renderDouble() {
+  const a = document.getElementById('panelArea');
+  a.className = 'panel-area double';
+  if (a.children.length < 2) a.appendChild(document.createElement('div'));
+  selected.forEach((id, i) => renderPanel(a.children[i], CASES.find(c => c.id === id), i));
+}
+
+function updateSelBar() {
+  const bar = document.getElementById('selBar');
+  if (!selected.length) { bar.className = 'sel-bar'; return; }
+  bar.className = 'sel-bar show';
+  document.getElementById('selNames').textContent = selected.map(id => CASES.find(c => c.id === id).short).join(' vs ');
+}
+
+function updatePins() {
+  CASES.forEach(c => {
+    const ring = document.getElementById('ring' + c.id);
+    if (!ring) return;
+    const idx = selected.indexOf(c.id);
+    if (idx >= 0) {
+      ring.setAttribute('stroke', SLOT_COLORS[idx]);
+      ring.setAttribute('stroke-width', '3');
+      ring.setAttribute('r', '14');
+    } else {
+      ring.setAttribute('stroke', 'none');
+      ring.setAttribute('stroke-width', '0');
+      ring.setAttribute('r', '11');
+    }
+  });
+}
+
+function clickPin(id) {
+  if (selected.includes(id)) { selected = selected.filter(x => x !== id); }
+  else { if (selected.length >= 2) selected.shift(); selected.push(id); }
+  updatePins(); updateSelBar();
+  if (selected.length === 2) renderDouble();
+  else if (selected.length === 1) renderSingle(CASES.find(c => c.id === selected[0]));
+  else renderEmpty();
+}
+
+function removeSlot(slot) {
+  selected.splice(slot, 1);
+  updatePins(); updateSelBar();
+  if (selected.length === 1) renderSingle(CASES.find(c => c.id === selected[0]));
+  else renderEmpty();
+}
+
+function clearAll() { selected = []; updatePins(); updateSelBar(); renderEmpty(); }
+
+d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us => {
+  const W = 860, H = 400;
+  const svg = d3.select('#mapSvg');
+  const proj = d3.geoMercator().center([-79.5, 36.6]).scale(4300).translate([W/2, H/2]);
+  const path = d3.geoPath(proj);
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  const targetFIPS = new Set(['37','51']);
+  const neighborFIPS = new Set(['45','13','47','21','54','24','11']);
+  const features = topojson.feature(us, us.objects.states).features;
+
+  svg.selectAll('path.state').data(features).join('path').attr('class','state').attr('d', path)
+    .attr('fill', d => {
+      const f = String(d.id).padStart(2,'0');
+      if (targetFIPS.has(f)) return isDark ? '#3c3c38' : '#e8e6de';
+      if (neighborFIPS.has(f)) return isDark ? '#2c2c2a' : '#f1efe8';
+      return isDark ? '#222220' : '#f8f7f4';
+    })
+    .attr('stroke', isDark ? '#444441' : '#c8c6be')
+    .attr('stroke-width', d => targetFIPS.has(String(d.id).padStart(2,'0')) ? 1 : 0.4);
+
+  [{ name:'VIRGINIA', lat:37.5, lng:-78.5 }, { name:'NORTH CAROLINA', lat:35.45, lng:-79.4 }]
+    .forEach(s => {
+      const xy = proj([s.lng, s.lat]);
+      svg.append('text').attr('x', xy[0]).attr('y', xy[1]).attr('text-anchor','middle')
+        .attr('font-size', 12).attr('fill', isDark?'#888780':'#b4b2a9')
+        .attr('font-weight','600').attr('letter-spacing','0.1em').attr('font-family','inherit')
+        .text(s.name);
+    });
+
+  const offsets = { 1:[0,24], 2:[36,-15], 3:[0,-19], 4:[-52,20], 5:[44,6] };
+  CASES.forEach(c => {
+    const xy = proj([c.lng, c.lat]);
+    if (!xy) return;
+    const g = svg.append('g').attr('class','pin').attr('id','pin'+c.id)
+      .attr('transform',`translate(${xy[0]},${xy[1]})`).on('click',()=>clickPin(c.id))
+      .style('cursor','pointer');
+    g.append('circle').attr('id','ring'+c.id).attr('r',11).attr('fill','none').attr('stroke','none');
+    g.append('circle').attr('r',10).attr('fill', PIN_COLORS[c.sentiment]||'#5f5e5a').attr('opacity',0.92)
+      .attr('stroke', isDark?'#1a1a18':'#fff').attr('stroke-width',1.5);
+    g.append('text').attr('text-anchor','middle').attr('dy',4).attr('font-size',8)
+      .attr('fill','#fff').attr('font-weight','600').attr('font-family','inherit')
+      .text(c.company.slice(0,2).toUpperCase());
+    const [dx,dy] = offsets[c.id] || [0,22];
+    g.append('text').attr('text-anchor','middle').attr('dx',dx).attr('dy',dy)
+      .attr('font-size',10).attr('font-weight','600').attr('fill', isDark?'#d3d1c7':'#3a3a38')
+      .attr('font-family','inherit').text(c.short);
+  });
+});
+
+/* ══════════════════════════════════════════
+   DECISION FRAMEWORK
+══════════════════════════════════════════ */
+const QS = [
+  { id:'scale', label:'Project scale',
+    text:'What is the proposed energy capacity of the data center?',
+    ctx:'Larger facilities strain grids and water more severely. The Balico proposal at 3,500 MW included an on-site gas plant — far beyond what local infrastructure could absorb. Projects over 300 MW typically require major new transmission investment, costs often socialized to ratepayers.',
+    opts:[
+      {label:'Under 200 MW', sub:'Smaller footprint, more manageable grid impact', val:'small'},
+      {label:'200–500 MW', sub:'Mid-scale, notable but negotiable grid demand', val:'mid'},
+      {label:'500 MW or more', sub:'Hyperscale — significant infrastructure implications', val:'large'}
+    ]
+  },
+  { id:'sentiment', label:'Community sentiment',
+    text:'What is the current community reaction?',
+    ctx:'The Kingsboro and Tarboro cases — same developer, same county — show how local sentiment can diverge dramatically. Tarboro\'s organized opposition led to permit denial; Kingsboro\'s neutral reception led to swift approval.',
+    opts:[
+      {label:'Positive or neutral', sub:'No organized opposition, officials supportive', val:'positive'},
+      {label:'Mixed', sub:'Some organized concern but no formal action yet', val:'mixed'},
+      {label:'Actively negative', sub:'Petitions, council opposition, or moratorium discussion', val:'negative'}
+    ]
+  },
+  { id:'promises', label:'Developer commitments',
+    text:'How specific and binding are developer promises?',
+    ctx:'Balico promised 390 jobs and up to $184M in taxes — but community skepticism of those figures fueled opposition. Concrete written commitments (rate agreements, enforceable mitigation) carry far more weight than general economic claims.',
+    opts:[
+      {label:'Specific binding commitments', sub:'Written agreements on jobs, rates, mitigation conditions', val:'strong'},
+      {label:'General promises only', sub:'Economic claims without binding terms', val:'weak'},
+      {label:'Minimal engagement', sub:'Developer has not substantively addressed concerns', val:'none'}
+    ]
+  },
+  { id:'energy', label:'Energy source',
+    text:'What energy source is proposed?',
+    ctx:'On-site fossil fuel generation — like Balico\'s natural gas plant — dramatically increases opposition risk. Renewable or grid-tied proposals face less environmental pushback, though grid strain concerns remain regardless.',
+    opts:[
+      {label:'Renewable or grid-tied', sub:'Solar, wind PPA, or standard grid interconnection', val:'clean'},
+      {label:'Mixed or unclear', sub:'Some renewable claims but fossil backup planned', val:'mixed'},
+      {label:'On-site fossil fuel plant', sub:'Natural gas or coal generation included in project', val:'fossil'}
+    ]
+  },
+  { id:'org', label:'Community organization',
+    text:'How organized is the community response so far?',
+    ctx:'Tarboro\'s permit denial and Balico\'s withdrawal both involved sustained organized opposition. Informal individual concern rarely produces policy outcomes without a coalition engaging legal, regulatory, and political channels simultaneously.',
+    opts:[
+      {label:'Well organized', sub:'Formal coalition, legal counsel, elected officials engaged', val:'strong'},
+      {label:'Early organizing', sub:'Petition or group forming, some official interest', val:'emerging'},
+      {label:'Individual concern only', sub:'No formal group yet, early awareness stage', val:'weak'}
+    ]
+  }
+];
+
+const RESULTS = {
+  negotiate: {
+    color:'#3b6d11', bg:'#eaf3de',
+    posture:'Negotiate with leverage',
+    sub:'Your situation is favorable — push hard for binding conditions before any approval is granted.',
+    actions:['Request a formal Community Benefits Agreement before any approvals','Engage your state Public Utility Commission on rate impact modeling early','Demand a direct grid investment agreement from the developer','Insist on enforceable noise, lighting, and hours-of-operation conditions','Secure written water use limits before construction begins'],
+    cases:['Kingsboro — favorable ordinance amendment process','Microsoft Catawba — Duke Energy substation deal secured']
+  },
+  conditional: {
+    color:'#854f0b', bg:'#faeeda',
+    posture:'Conditional approval — seek protections',
+    sub:'The project may be viable but needs significant safeguards before any vote.',
+    actions:['Commission an independent rate and grid impact study','Require a revised Environmental Impact Statement covering water and grid','Negotiate phased construction tied to mitigation milestones','Engage state legislators about cost socialization legislation','Require renewable energy commitment with enforceable timeline'],
+    cases:['Tarboro — permit denial after insufficient commitments','Microsoft Catawba — restarted only after conditions met']
+  },
+  pause: {
+    color:'#993556', bg:'#fbeaf0',
+    posture:'Pause and organize first',
+    sub:'Significant risk and insufficient community capacity to negotiate effectively right now.',
+    actions:['Consider a temporary permitting moratorium while impacts are studied','Hire independent technical consultants on grid and environmental impact','Form a formal coalition with legal representation before engaging developer','Document all developer promises and communications in writing','Engage county commissioners and state representatives proactively'],
+    cases:['Balico VA — withdrawn after organized sustained opposition','Tarboro — denial driven by organized community action']
+  }
+};
+
+let answers = {}, cur = 0;
+
+function fwScore() {
+  let s = 0;
+  if (answers.scale==='large') s+=2; else if (answers.scale==='mid') s+=1;
+  if (answers.sentiment==='negative') s+=2; else if (answers.sentiment==='mixed') s+=1;
+  if (answers.promises==='none') s+=2; else if (answers.promises==='weak') s+=1;
+  if (answers.energy==='fossil') s+=2; else if (answers.energy==='mixed') s+=1;
+  if (answers.org==='strong') s-=1; else if (answers.org==='weak') s+=1;
+  if (s<=2) return 'negotiate';
+  if (s<=5) return 'conditional';
+  return 'pause';
+}
+
+function fwNav() {
+  document.getElementById('nav').innerHTML = QS.map((q,i)=>`<span class="sp ${i<cur?'done':i===cur?'active':''}">${i+1}. ${q.label}</span>`).join('');
+  document.getElementById('pf').style.width = (cur/QS.length*100)+'%';
+}
+
+function fwRender() {
+  if (cur >= QS.length) { fwResult(); return; }
+  const q = QS[cur]; fwNav();
+  document.getElementById('fwContent').innerHTML = `
+    <div class="qcard">
+      <div class="qlabel">Question ${cur+1} of ${QS.length} — ${q.label}</div>
+      <div class="qtext">${q.text}</div>
+      <div class="qctx">${q.ctx}</div>
+      <div class="opts">${q.opts.map(o=>`
+        <button class="opt" onclick="fwAnswer('${o.val}')">
+          <span class="ol">${o.label}</span>
+          <span class="os">${o.sub}</span>
+        </button>`).join('')}
+      </div>
+    </div>`;
+}
+
+function fwAnswer(val) { answers[QS[cur].id]=val; cur++; fwRender(); }
+
+function fwResult() {
+  const key = fwScore(), r = RESULTS[key];
+  document.getElementById('pf').style.width='100%';
+  document.getElementById('nav').innerHTML = QS.map(q=>`<span class="sp done">${q.label}</span>`).join('');
+  document.getElementById('fwContent').innerHTML = `
+    <div class="result-card">
+      <div class="rh" style="background:${r.bg}">
+        <div class="rposture" style="color:${r.color}">${r.posture}</div>
+        <div class="rsub" style="color:${r.color}">${r.sub}</div>
+      </div>
+      <div class="rb">
+        <div class="rs"><div class="rs-title">Recommended actions</div>
+          <ul class="al">${r.actions.map(a=>`<li>${a}</li>`).join('')}</ul>
+        </div>
+        <div class="rs"><div class="rs-title">Comparable cases</div>
+          <div class="chips">${r.cases.map(c=>`<span class="chip">${c}</span>`).join('')}</div>
+        </div>
+      </div>
+    </div>
+    <button class="restart" onclick="fwRestart()">Start over</button>`;
+}
+
+function fwRestart() { answers={}; cur=0; fwRender(); }
+fwRender();
+
+/* ─── Decision Tree SVG ─── */
+function drawTree() {
+  const svg = document.getElementById('treeSvg');
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const tc = isDark ? '#d3d1c7' : '#3a3a38';
+  const tc2 = isDark ? '#888780' : '#888780';
+  const lc = isDark ? '#444441' : '#d3d1c7';
+  const sf = isDark ? '#2c2c2a' : '#f1efe8';
+  const sf2 = isDark ? '#242422' : '#ffffff';
+
+  const nodes = [
+    {id:'root', x:95,  y:10,  w:190, h:34, label:'Community receives DC proposal', fill:sf, tc:tc, r:6, bold:true},
+    {id:'q1a',  x:10,  y:76,  w:110, h:26, label:'<200 MW', fill:sf2, tc:tc2, r:4},
+    {id:'q1b',  x:135, y:76,  w:110, h:26, label:'200–500 MW', fill:sf2, tc:tc2, r:4},
+    {id:'q1c',  x:260, y:76,  w:110, h:26, label:'500+ MW', fill:sf2, tc:tc2, r:4},
+    {id:'q2a',  x:10,  y:148, w:100, h:26, label:'+ sentiment', fill:sf2, tc:tc2, r:4},
+    {id:'q2b',  x:130, y:148, w:100, h:26, label:'mixed sentiment', fill:sf2, tc:tc2, r:4},
+    {id:'q2c',  x:260, y:148, w:100, h:26, label:'– sentiment', fill:sf2, tc:tc2, r:4},
+    {id:'q3a',  x:10,  y:218, w:100, h:26, label:'binding commits', fill:sf2, tc:tc2, r:4},
+    {id:'q3b',  x:135, y:218, w:100, h:26, label:'weak commits', fill:sf2, tc:tc2, r:4},
+    {id:'q3c',  x:262, y:218, w:100, h:26, label:'no engagement', fill:sf2, tc:tc2, r:4},
+    {id:'r1',   x:10,  y:300, w:110, h:46, label:'Negotiate with leverage', fill:'#eaf3de', tc:'#3b6d11', r:8, bold:true},
+    {id:'r2',   x:135, y:300, w:110, h:46, label:'Conditional approval', fill:'#faeeda', tc:'#854f0b', r:8, bold:true},
+    {id:'r3',   x:262, y:300, w:110, h:46, label:'Pause & organize', fill:'#fbeaf0', tc:'#993556', r:8, bold:true},
+    {id:'c1',   x:10,  y:402, w:110, h:34, label:'Community Benefits Agreement', fill:sf, tc:tc, r:4},
+    {id:'c2',   x:135, y:402, w:110, h:34, label:'Independent impact study', fill:sf, tc:tc, r:4},
+    {id:'c3',   x:262, y:402, w:110, h:34, label:'Moratorium + coalition', fill:sf, tc:tc, r:4},
+    {id:'e1',   x:20,  y:480, w:90,  h:24, label:'Kingsboro path', fill:sf2, tc:tc2, r:4},
+    {id:'e2',   x:143, y:480, w:90,  h:24, label:'Catawba path', fill:sf2, tc:tc2, r:4},
+    {id:'e3',   x:270, y:480, w:90,  h:24, label:'Balico path', fill:sf2, tc:tc2, r:4},
+  ];
+
+  const edges = [
+    ['root','q1a'],['root','q1b'],['root','q1c'],
+    ['q1a','q2a'],['q1b','q2b'],['q1c','q2c'],
+    ['q2a','q3a'],['q2b','q3b'],['q2c','q3c'],
+    ['q3a','r1'],['q3b','r2'],['q3c','r3'],
+    ['r1','c1'],['r2','c2'],['r3','c3'],
+    ['c1','e1'],['c2','e2'],['c3','e3']
+  ];
+
+  const nmap = {};
+  nodes.forEach(n => nmap[n.id] = n);
+
+  // draw edges first
+  edges.forEach(([a,b]) => {
+    const n1=nmap[a], n2=nmap[b];
+    const x1=n1.x+n1.w/2, y1=n1.y+n1.h, x2=n2.x+n2.w/2, y2=n2.y;
+    const my=(y1+y2)/2;
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',`M${x1},${y1} C${x1},${my} ${x2},${my} ${x2},${y2}`);
+    p.setAttribute('fill','none'); p.setAttribute('stroke',lc); p.setAttribute('stroke-width','1');
+    svg.appendChild(p);
+  });
+
+  // draw nodes
+  nodes.forEach(n => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('x',n.x); rect.setAttribute('y',n.y);
+    rect.setAttribute('width',n.w); rect.setAttribute('height',n.h);
+    rect.setAttribute('rx',n.r); rect.setAttribute('fill',n.fill);
+    rect.setAttribute('stroke',lc); rect.setAttribute('stroke-width','0.5');
+    g.appendChild(rect);
+
+    const words = n.label.split(' ');
+    let lines = [], line = '';
+    const maxW = n.w - 10;
+    words.forEach(w => {
+      const test = line ? line+' '+w : w;
+      if (test.length * 5.5 > maxW && line) { lines.push(line); line=w; }
+      else line = test;
+    });
+    if (line) lines.push(line);
+    const lh = 12, th = lines.length * lh;
+    const sy = n.y + (n.h - th) / 2 + lh - 1;
+    lines.forEach((l,i) => {
+      const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x', n.x + n.w/2); txt.setAttribute('y', sy + i*lh);
+      txt.setAttribute('text-anchor','middle'); txt.setAttribute('font-size','9.5');
+      txt.setAttribute('fill', n.tc); txt.setAttribute('font-family','inherit');
+      if (n.bold) txt.setAttribute('font-weight','600');
+      txt.textContent = l.trim();
+      g.appendChild(txt);
+    });
+    svg.appendChild(g);
+  });
+}
+
+drawTree();
+</script>
+</body>
+</html>
